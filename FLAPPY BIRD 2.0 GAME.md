@@ -5,7 +5,7 @@
 
 **This game was inspired by the Original Flappy Bird, although this time there is a different Bird.**​ **The purpose of this game is to get the bird across as many pipes as possible without colliding with the pipes.**  **In terms of gameplay mechanics, the only real button that is needed in this game is the space bar on your personal computer.**​  **In "Flappy Bird 2.0" the space bar acts as a jump button and it is the only button that you can use to prevent the bird from hitting the ground or colliding with one of the pipes**​.  **Time the jumps right and you should be able to get across the pipes  without any collisions.**​  **Secure bragging rights by getting a higher score than your friends\!\!**​
 
-  
+\# START
 import pygame  
 import random
 
@@ -75,7 +75,6 @@ def show\_game\_over\_screen():
 running \= True  
 while running:  
     screen.blit(background, (0, 0))
-
     if not game\_started:  
         show\_start\_screen()  
     elif game\_active:  
