@@ -12,16 +12,20 @@
 import pygame  
 import random
 
+
 \# Initialize  
+
 pygame.init()
 
 \# Screen dimensions  
+
 WIDTH \= 600  
 HEIGHT \= 715  
 screen \= pygame.display.set\_mode((WIDTH, HEIGHT))  
 pygame.display.set\_caption("Flappy Bird 2.0")
 
 \# Load assets  
+
 background \= pygame.image.load(r"C:\\Users\\eric3\\Desktop\\comp61\\download.png")  
 background \= pygame.transform.scale(background, (WIDTH, HEIGHT))
 
@@ -36,10 +40,12 @@ font \= pygame.font.Font(r"C:\\Users\\eric3\\Desktop\\comp61\\LEMONMILK-MediumIt
 clock \= pygame.time.Clock()
 
 \# Sounds  
+
 flap\_sound \= pygame.mixer.Sound(r"C:\\Users\\eric3\\Desktop\\comp61\\laser.wav")  
 hit\_sound \= pygame.mixer.Sound(r"C:\\Users\\eric3\\Desktop\\comp61\\explosion.wav")
 
 \# Game variables  
+
 gravity \= 0.5  
 bird\_y \= HEIGHT // 2  
 bird\_vel \= 0
@@ -74,7 +80,11 @@ def show\_game\_over\_screen():
     over\_text \= font.render("Game Over \- Press SPACE", True, (255, 0, 0))  
     screen.blit(over\_text, (40, HEIGHT // 2 \- 50))
 
+
+
 \# Game loop  
+
+
 running \= True  
 while running:  
     screen.blit(background, (0, 0))
