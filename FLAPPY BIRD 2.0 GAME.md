@@ -75,6 +75,7 @@ def show\_game\_over\_screen():
 running \= True  
 while running:  
     screen.blit(background, (0, 0))
+    
     if not game\_started:  
         show\_start\_screen()  
     elif game\_active:  
