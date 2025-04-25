@@ -1,4 +1,4 @@
-import pygame
+import pygame 
 import random
 
 # Initialize
@@ -23,6 +23,9 @@ pipe_img = pygame.transform.scale(pipe_img, (80, 500))
 
 plant_img = pygame.image.load(r"C:\Users\eric3\Desktop\comp61\584df4386a5ae41a83ddee0a.png")
 plant_img = pygame.transform.scale(plant_img, (40, 40))
+
+coin_img = pygame.image.load(r"C:\Users\eric3\Desktop\comp61\dollar.png")
+coin_img = pygame.transform.scale(coin_img, (30, 30))
 
 font = pygame.font.Font(r"C:\Users\eric3\Desktop\comp61\LEMONMILK-MediumItalic.otf", 32)
 
@@ -55,6 +58,13 @@ plant_offset = 0
 plant_direction = 1
 plant_on_top = random.choice([True, False])  # Randomly choose plant position
 
+# Coin variables
+coin_collected = 0
+coin_x = WIDTH + 200
+coin_y = random.randint(100, HEIGHT - 100)
+lives = 1
+
+
 def draw_pipe(x, height, offset, on_top):
     top_pipe = pygame.transform.flip(pipe_img, False, True)
     bottom_pipe = pipe_img
@@ -82,11 +92,17 @@ def display_score(score, high_score):
     screen.blit(score_text, (10, 10))
     screen.blit(high_text, (10, 50))
 
+def display_lives(lives):
+    lives_text = font.render(f"Lives: {lives}", True, (255, 0, 0))
+    screen.blit(lives_text, (WIDTH - lives_text.get_width() - 10, 10))
+
 def show_start_screen():
     title = font.render("Flappy Bird 2.0", True, (255, 215, 0))
     prompt = font.render("Press SPACE to Start", True, (255, 255, 255))
+    coin_info = font.render("Collect 3 Coins for Extra lives", True, (0, 0, 0))  # Black font
     screen.blit(title, (WIDTH // 2 - title.get_width() // 2, HEIGHT // 2 - 100))
     screen.blit(prompt, (WIDTH // 2 - prompt.get_width() // 2, HEIGHT // 2 - 30))
+    screen.blit(coin_info, (WIDTH // 2 - coin_info.get_width() // 2, HEIGHT // 2 + 10))
 
 def show_game_over_screen():
     over_text = font.render("Game Over - Press SPACE", True, (255, 0, 0))
@@ -113,12 +129,30 @@ while running:
             plant_on_top = random.choice([True, False])  # Randomize next pipe's plant
             score += 1
 
+         # Coin movement
+        coin_x -= 4
+        if coin_x < -30:
+            coin_x = WIDTH + random.randint(100, 300)
+            coin_y = random.randint(100, HEIGHT - 100)
+
         # Animate plant offset
         plant_offset += plant_direction
         if plant_offset > 30 or plant_offset < 0:
             plant_direction *= -1
 
         draw_pipe(pipe_x, pipe_height, plant_offset, plant_on_top)
+
+        # Draw and check coin collision
+        screen.blit(coin_img, (coin_x, coin_y))
+        bird_rect = pygame.Rect(50, bird_y, 50, 50)
+        coin_rect = pygame.Rect(coin_x, coin_y, 30, 30)
+        if bird_rect.colliderect(coin_rect):
+            coin_collected += 1
+            coin_x = WIDTH + random.randint(100, 300)
+            coin_y = random.randint(100, HEIGHT - 100)
+            if coin_collected == 3:
+                lives += 1
+                coin_collected = 0
 
         # Collision detection
         bird_rect = pygame.Rect(50, bird_y, 50, 50)
@@ -135,11 +169,22 @@ while running:
                 bird_rect.colliderect(plant_rect) or
                 bird_y > HEIGHT or bird_y < 0):
             hit_sound.play()
-            game_active = False
-            if score > high_score:
-                high_score = score
+            lives -= 1
+            if lives <= 0:
+                game_active = False
+                if score > high_score:
+                    high_score = score
+            else:
+                bird_y = HEIGHT // 2
+                bird_vel = 0
+                pipe_x = WIDTH
+                pipe_height = random.randint(100, 400)
+                plant_on_top = random.choice([True, False])
+                coin_x = WIDTH + random.randint(100, 300)
+                coin_y = random.randint(100, HEIGHT - 100)
 
         display_score(score, high_score)
+        display_lives(lives)
 
     else:
         show_game_over_screen()
@@ -163,6 +208,10 @@ while running:
                     plant_offset = 0
                     plant_direction = 1
                     plant_on_top = random.choice([True, False])
+                    coin_collected = 0
+                    coin_x = WIDTH + 200
+                    coin_y = random.randint(100, HEIGHT - 100)
+                    lives = 1
                     game_active = True
                 else:
                     bird_vel = -8
